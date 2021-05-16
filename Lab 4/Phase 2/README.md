@@ -35,3 +35,4 @@ Phase 1 defused. How about the next one?
 1 2 4 7 11 16
 That's number 2.  Keep going!
 ```
+> Chính xác!
