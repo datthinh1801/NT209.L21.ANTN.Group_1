@@ -3,6 +3,7 @@
 Sau đây sẽ là bài phân tích Secret Phase
 
 Ta để ý là sau mối phase (từ phase 1 -> 6) sẽ gọi một hàm `phase_defused()`
+
 ![image](https://user-images.githubusercontent.com/31529599/118503837-2e310600-b755-11eb-882f-706a03b521d8.png)
 
 Mở hàm đó và phân tích
@@ -33,6 +34,7 @@ Ta thấy trong hàm này sẽ gọi `secret_phase` nên ta biết được hàm
 Tiến hành phân tích, ở câu lệnh `if` đầu tiên thì chương trình sẽ kiểm tra biến `num_input_strings` có bằng `6` hay không nên mình đoán biến này là biến đếm cho `6` chuỗi nhập vào của `6` phase. Tuy nhiên mình đã phân tích và thấy đúng như vậy.
 
 Ở trong hàm `read_line()` sau khi đọc một chuỗi vào thì chương trình sẽ thực hiện tăng biến `num_input_string` lên `1` và biến này được lưu trong phân vùng `bss` nên được sài `global`
+
 ![image](https://user-images.githubusercontent.com/31529599/118505293-7d2b6b00-b756-11eb-8411-dbfb2b237b57.png)
 
 Vậy có nghĩa là để hàm `phase_defused()` gọi được hàm `secret_phase()` thì chúng ta phải pass được tất cả `6` phase của chương trình `bomb` này
@@ -104,6 +106,7 @@ Ta bắt đầu `debug` bằng `gdb` để xong các giá trị tại `&n1`
 `n1` đang trỏ tới `0x804x088`
 
 Ta xem vùng nhớ tại `n1`
+
 ![image](https://user-images.githubusercontent.com/31529599/118510675-5facd000-b75b-11eb-87d6-432c89f873a2.png)
 
 Từ địa chỉ trên suy ra mảng `a1` = {0x24, 0x8, 0x32, 0x16, 0x2d, 0x06, 0x6b, 0x28, 0x1, 0x63,.... }
