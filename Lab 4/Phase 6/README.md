@@ -199,13 +199,20 @@ Cứ như vậy chương trình sẽ kiểm tra cứ như vậy cho 5 vòng lặ
 
 
 Vì ở đây `ebx` = `0x5c` < `eax` = `0x186` nên chương trình sẽ nổ bomb là thoát chương trình
+![image](https://user-images.githubusercontent.com/31529599/118471923-7c80dd80-b732-11eb-8fd7-5d333da8ba58.png)
+
 
 Sau phân tích ở trên thì ta đoán chương trình có `6` `node` và input nhập vào cũng là từ `1` đến `6` cho nên khả năng cao sẽ liên quan đến nhau
 
 
+Để mà chương trình không nổ `bomb` và in ra chuỗi ta mong muốn thì phải đúng được tất cả điều kiện trong 5 vòng lặp trên, Theo như phân tích ở trên thì để đúng được tất cả vòng lặp thì `Nodex > Nodex > Nodex > Nodex > Nodex > Nodex` với các `node` là liên tiếp nhau tương ứng với giá trị thì ta có `Node1 > Node6 > Node4 > Node3 > Node5 > Node2`
 
+Vậy ta đoán thì thứ tự nhập vào sẽ là `1 6 4 3 5 2` tuy nhiên trước khi đến đoạn xử lí và so sánh với các `Node` thì chương trình đã thực hiện tính lại các giá trị nhập vào bằng cách lấy `7` trừ đi chính nó như đã phân tích ở trên vậy nên để có mảng `1 6 4 3 5 2` thì input sẽ là `6 1 3 4 2 5`
 
+## Chạy thử chương trình và xem kết quả
+![image](https://user-images.githubusercontent.com/31529599/118502376-d8a82980-b753-11eb-8bd7-68d5778faa3d.png)
 
+# Đúng, vậy bomb đã được giải hoàn tất mà không cần phân tích hết tất cả source :))
 
 
 
