@@ -158,3 +158,55 @@ Phân tích đoạn tiếp theo:
   while ( v13 );
 ```
 
+Đây là đoạn code assembly của đoạn code c trên
+![image](https://user-images.githubusercontent.com/31529599/118448433-328cfd00-b71c-11eb-9a06-5d7c42f0c6ba.png)
+
+Tiến hành debug
+![image](https://user-images.githubusercontent.com/31529599/118471923-7c80dd80-b732-11eb-8fd7-5d333da8ba58.png)
+
+
+Ở đoạn debug này thì chương trình sẽ ` cmp    dword ptr [ebx], eax <0x804c16c>`  trong đó `ebx` đang trỏ tới `node5` và `eax` trỏ tới `ebx+8` chính là `node5+8`
+
+Ở trên nơi hiển thị giá trị các thanh ghi, ta thấy `ecx` đang trỏ tới `node1` và có giá trị `0x804c13c`
+
+![image](https://user-images.githubusercontent.com/31529599/118470892-5444af00-b731-11eb-80d9-5755ec913fb1.png)
+
+Xem vùng nhớ tại `node1` (`0x804c13c`)
+
+![image](https://user-images.githubusercontent.com/31529599/118471064-88b86b00-b731-11eb-9b30-d3abd90d2cf6.png)
+
+Thống kê lại các `node` ta có:
+
+`0x804c13c` -> `node1` có giá trị `0x3af`
+
+`0x0804c148` -> `node2` có giá trị `0x59`
+
+`0x0804c154` -> `node3` có giá trị `0x160`
+
+`0x0804c160` -> `node4` có giá trị `0x186` 
+
+`0x0804c16c` -> `node5` có giá trị `0x5c`
+
+`0x804c178` -> `node6` có giá trị `0x397`
+
+Vậy ở câu lênh `cmp` thì `ebx` là `node5` có giá trị `0x5c` và `eax` có giá trị `0x186` thì sẽ tương ứng với `node4`
+
+Câu lệnh tiếp theo ` jge    phase_6+224 <phase_6+224>`, chương trình kiểm tra nếu giá trị ở `ebx` (`node5`) lớn hơn hoặc bằng giá trị ở `eax`(`node4`) thì sẽ nhảy đến lệnh tiếp theo thực hiện theo tăng `ebx` lên `8` đơn vị và tiếp tục kiểm tra `cmp` như câu lệnh trên, nếu sai thì sẽ nổ `bomb` và kết thúc chương trình `call   explode_bomb <explode_bomb>`
+
+![image](https://user-images.githubusercontent.com/31529599/118472894-9373ff80-b733-11eb-8e8b-724da3051379.png)
+
+Cứ như vậy chương trình sẽ kiểm tra cứ như vậy cho 5 vòng lặp cho đến khi `esi` == `0` (ban đầu `esi` = 5`)
+
+
+Vì ở đây `ebx` = `0x5c` < `eax` = `0x186` nên chương trình sẽ nổ bomb là thoát chương trình
+
+Sau phân tích ở trên thì ta đoán chương trình có `6` `node` và input nhập vào cũng là từ `1` đến `6` cho nên khả năng cao sẽ liên quan đến nhau
+
+
+
+
+
+
+
+
+
