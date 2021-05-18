@@ -1,10 +1,7 @@
 # Phase 6
 
 ## Solution
-
-Tiếp tục phân tích Phase 6 
-
-Đây là đoạn pseudocode của Phase này
+Đây là đoạn pseudocode của Phase này.
 
 ```c
 unsigned int __cdecl phase_6(int a1)
@@ -117,19 +114,15 @@ unsigned int __cdecl phase_6(int a1)
   }
 ```
 
-Ở phần đầu này thì chương trình gọi hàm `read_six_number()` như ở phase 2 và lưu vào biến `a1`
+Ở phần đầu này thì chương trình gọi hàm `read_six_number()` như ở phase 2 và lưu vào biến `a1`.
 
 Ở trong vòng `while` tiếp theo thì chương trình lần lượt:
+-  Kiểm tra nếu một trong 6 chữ số nhập vào lớn hơn 6 ( `(unsigned int)(v16[v2] - 1) > 5` ) thì sẽ nổ `bomb` và thoát chương trình (tuy nhiên vì ở đây, lấy ra một số `unsigned` nên các số nhập vào sẽ lớn hơn hoặc bằng 0).
+- Tiếp theo kiểm tra tất cả các phần tử phải khác nhau, nếu giống nhau (`*(&v15 + v2) == v16[v3]`) thì sẽ nổ `bom` và thoát chương trình.
 
-### Kiểm tra nếu một trong 6 chữ số nhập vào lớn hơn 6 ( `(unsigned int)(v16[v2] - 1) > 5` ) thì sẽ nổ `bomb` và thoát chương trình ( Tuy nhiên vì ở đây, lấy ra một số `unsigned` nên các số nhập vào sẽ lớn hơn hoặc bằng 0 )
-### Tiếp theo kiểm tra tất cả các phần tử phải khác nhau, nếu giống nhau (`*(&v15 + v2) == v16[v3]`) thì sẽ nổ `bom` và thoát chương trình
+> Vậy 6 số nhập vào sẽ là các số nguyên nằm trong khoảng từ `0` đến `6`.  
 
-Vậy 6 số nhập vào sẽ là các số nguyên nằm trong khoảng từ `0` đến `6`
-
-
-
-Phân tích đoạn tiếp theo:
-
+Phân tích đoạn tiếp theo:  
 ```c
   v4 = v16;
   do
@@ -140,11 +133,10 @@ Phân tích đoạn tiếp theo:
   while ( v17 != v4 );
 ```
 
-Đoạn này sẽ lấy các phần từ nhập vào sẽ đó tính toán lại bằng cách lấy (7 - (giá trị của phần tử) ) vd: ban đầu là 4 thì sau sẽ là 7 - 4  = 3 ...
+Đoạn này sẽ lấy các phần tử được nhập và sẽ tính toán lại bằng cách lấy (7 - (giá trị của phần tử)) vd: ban đầu là 4 thì sau sẽ là 7 - 4  = 3 ...
+> Đoạn tiếp theo này thì hầu hết là sẽ đọc code assembly chứ không thể tiếp tục phân tích bằng pseudocode nữa.  
 
-## Đoạn tiếp theo này thì hầu hết là sẽ đọc code assembly chứ không thể tiếp tục phân tích bằng pseudocode nữa
 ### Sử dụng `gdb` để debug
-
 Đầu tiên ta nhìn vào pseudocode thì thấy chương trình sẽ thực hiện tính toán cho đến đoạn code cuối này mới kiểm tra điều kiện. Nên mình đã đặt breakpoint ngay trước hàm này để xem chương trình làm gì.
 
 ```c
@@ -158,61 +150,58 @@ Phân tích đoạn tiếp theo:
   while ( v13 );
 ```
 
-Đây là đoạn code assembly của đoạn code c trên
+Đây là đoạn code assembly của đoạn code c trên:  
 ![image](https://user-images.githubusercontent.com/31529599/118448433-328cfd00-b71c-11eb-9a06-5d7c42f0c6ba.png)
 
-Tiến hành debug
-![image](https://user-images.githubusercontent.com/31529599/118471923-7c80dd80-b732-11eb-8fd7-5d333da8ba58.png)
+Tiến hành debug:  
+![image](https://user-images.githubusercontent.com/31529599/118471923-7c80dd80-b732-11eb-8fd7-5d333da8ba58.png)  
+
+Ở đoạn debug này thì chương trình sẽ ` cmp    dword ptr [ebx], eax <0x804c16c>`  trong đó `ebx` đang trỏ tới `node5` và `eax` trỏ tới `ebx+8` chính là `node5+8`.  
+
+Ở khung hiển thị giá trị các thanh ghi, ta thấy `ecx` đang trỏ tới `node1` và có giá trị `0x804c13c`.  
+
+![image](https://user-images.githubusercontent.com/31529599/118470892-5444af00-b731-11eb-80d9-5755ec913fb1.png)  
+
+Xem vùng nhớ tại `node1` (`0x804c13c`):  
+
+![image](https://user-images.githubusercontent.com/31529599/118471064-88b86b00-b731-11eb-9b30-d3abd90d2cf6.png)  
+
+Thống kê lại các `node` ta có:  
+
+- `0x804c13c` -> `node1` có giá trị `0x3af`
+
+- `0x0804c148` -> `node2` có giá trị `0x59`
+
+- `0x0804c154` -> `node3` có giá trị `0x160`
+
+- `0x0804c160` -> `node4` có giá trị `0x186` 
+
+- `0x0804c16c` -> `node5` có giá trị `0x5c`
+
+- `0x804c178` -> `node6` có giá trị `0x397`
+
+Vậy ở câu lệnh `cmp` thì `ebx` là `node5` có giá trị `0x5c` và `eax` có giá trị `0x186` thì sẽ tương ứng với `node4`.  
+
+Câu lệnh tiếp theo ` jge    phase_6+224 <phase_6+224>`, chương trình kiểm tra nếu giá trị ở `ebx` (`node5`) lớn hơn hoặc bằng giá trị ở `eax`(`node4`) thì sẽ nhảy đến lệnh tiếp theo thực hiện theo tăng `ebx` lên `8` đơn vị và tiếp tục kiểm tra `cmp` như câu lệnh trên, nếu sai thì sẽ nổ `bomb` và kết thúc chương trình `call   explode_bomb <explode_bomb>`.  
+
+![image](https://user-images.githubusercontent.com/31529599/118472894-9373ff80-b733-11eb-8e8b-724da3051379.png)  
+
+Cứ như vậy chương trình sẽ kiểm tra cứ như vậy cho 5 vòng lặp cho đến khi `esi` == `0` (ban đầu `esi = 5`).  
 
 
-Ở đoạn debug này thì chương trình sẽ ` cmp    dword ptr [ebx], eax <0x804c16c>`  trong đó `ebx` đang trỏ tới `node5` và `eax` trỏ tới `ebx+8` chính là `node5+8`
+Vì ở đây `ebx = 0x5c < eax = 0x186` nên chương trình sẽ nổ bomb là thoát chương trình.  
+![image](https://user-images.githubusercontent.com/31529599/118471923-7c80dd80-b732-11eb-8fd7-5d333da8ba58.png)  
 
-Ở trên nơi hiển thị giá trị các thanh ghi, ta thấy `ecx` đang trỏ tới `node1` và có giá trị `0x804c13c`
+> Sau phân tích ở trên thì ta đoán chương trình có `6 node` và input nhập vào cũng là từ `1` đến `6` cho nên khả năng cao sẽ liên quan đến nhau.  
 
-![image](https://user-images.githubusercontent.com/31529599/118470892-5444af00-b731-11eb-80d9-5755ec913fb1.png)
+Để chương trình không nổ `bomb` và in ra chuỗi ta mong muốn thì phải đúng được tất cả điều kiện trong 5 vòng lặp trên. Theo như phân tích thì để đúng được tất cả vòng lặp thì `Nodex > Nodex > Nodex > Nodex > Nodex > Nodex` với các `node` là liên tiếp nhau tương ứng với giá trị thì ta có `Node1 > Node6 > Node4 > Node3 > Node5 > Node2`
 
-Xem vùng nhớ tại `node1` (`0x804c13c`)
-
-![image](https://user-images.githubusercontent.com/31529599/118471064-88b86b00-b731-11eb-9b30-d3abd90d2cf6.png)
-
-Thống kê lại các `node` ta có:
-
-`0x804c13c` -> `node1` có giá trị `0x3af`
-
-`0x0804c148` -> `node2` có giá trị `0x59`
-
-`0x0804c154` -> `node3` có giá trị `0x160`
-
-`0x0804c160` -> `node4` có giá trị `0x186` 
-
-`0x0804c16c` -> `node5` có giá trị `0x5c`
-
-`0x804c178` -> `node6` có giá trị `0x397`
-
-Vậy ở câu lênh `cmp` thì `ebx` là `node5` có giá trị `0x5c` và `eax` có giá trị `0x186` thì sẽ tương ứng với `node4`
-
-Câu lệnh tiếp theo ` jge    phase_6+224 <phase_6+224>`, chương trình kiểm tra nếu giá trị ở `ebx` (`node5`) lớn hơn hoặc bằng giá trị ở `eax`(`node4`) thì sẽ nhảy đến lệnh tiếp theo thực hiện theo tăng `ebx` lên `8` đơn vị và tiếp tục kiểm tra `cmp` như câu lệnh trên, nếu sai thì sẽ nổ `bomb` và kết thúc chương trình `call   explode_bomb <explode_bomb>`
-
-![image](https://user-images.githubusercontent.com/31529599/118472894-9373ff80-b733-11eb-8e8b-724da3051379.png)
-
-Cứ như vậy chương trình sẽ kiểm tra cứ như vậy cho 5 vòng lặp cho đến khi `esi` == `0` (ban đầu `esi` = 5`)
-
-
-Vì ở đây `ebx` = `0x5c` < `eax` = `0x186` nên chương trình sẽ nổ bomb là thoát chương trình
-![image](https://user-images.githubusercontent.com/31529599/118471923-7c80dd80-b732-11eb-8fd7-5d333da8ba58.png)
-
-
-Sau phân tích ở trên thì ta đoán chương trình có `6` `node` và input nhập vào cũng là từ `1` đến `6` cho nên khả năng cao sẽ liên quan đến nhau
-
-
-Để mà chương trình không nổ `bomb` và in ra chuỗi ta mong muốn thì phải đúng được tất cả điều kiện trong 5 vòng lặp trên, Theo như phân tích ở trên thì để đúng được tất cả vòng lặp thì `Nodex > Nodex > Nodex > Nodex > Nodex > Nodex` với các `node` là liên tiếp nhau tương ứng với giá trị thì ta có `Node1 > Node6 > Node4 > Node3 > Node5 > Node2`
-
-Vậy ta đoán thì thứ tự nhập vào sẽ là `1 6 4 3 5 2` tuy nhiên trước khi đến đoạn xử lí và so sánh với các `Node` thì chương trình đã thực hiện tính lại các giá trị nhập vào bằng cách lấy `7` trừ đi chính nó như đã phân tích ở trên vậy nên để có mảng `1 6 4 3 5 2` thì input sẽ là `6 1 3 4 2 5`
+Vậy ta đoán thì thứ tự nhập vào sẽ là `1 6 4 3 5 2` tuy nhiên trước khi đến đoạn xử lí và so sánh với các `Node` thì chương trình đã thực hiện tính lại các giá trị nhập vào bằng cách lấy `7` trừ đi chính nó như đã phân tích ở trên vậy nên để có mảng `1 6 4 3 5 2` thì input sẽ là `6 1 3 4 2 5`.
 
 ## Chạy thử chương trình và xem kết quả
-![image](https://user-images.githubusercontent.com/31529599/118502376-d8a82980-b753-11eb-8bd7-68d5778faa3d.png)
+![image](https://user-images.githubusercontent.com/31529599/118502376-d8a82980-b753-11eb-8bd7-68d5778faa3d.png)  
 
-# Đúng, vậy bomb đã được giải hoàn tất mà không cần phân tích hết tất cả source :))
+> Đúng, vậy bomb đã được gỡ hoàn toàn mà không cần phân tích hết tất cả source code.
 
 
 
