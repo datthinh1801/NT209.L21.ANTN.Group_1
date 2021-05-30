@@ -1,6 +1,20 @@
 # Level 1
 ## Task
-Buffer overflow để thực thi được hàm `fizz()`.  
+```
+└─$ ./bufbomb -u 09821978
+Userid: 09821978
+Cookie: 0x31f21393
+Type string:abcdefgh
+```
+```
+└─$ ./bufbomb -u 09821978
+Userid: 09821978
+Cookie: 0x31f21393
+Type string:abcdefgh
+Dud: getbuf returned 0x1
+Better luck next time
+```
+> Buffer overflow để thực thi được hàm `fizz()`.  
 
 ## Solution
 ```python
