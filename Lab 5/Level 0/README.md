@@ -114,7 +114,7 @@ Stack khi bị buffer overflow:
 |             'AAAA'              |---> ebp của hàm getbuf()
 +---------------------------------+
                .
-               . => 0x25 bytes 
+               . => 0x1C bytes 
                .
 
 +---------------------------------+
