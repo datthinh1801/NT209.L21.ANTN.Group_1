@@ -58,7 +58,7 @@ Trước khi hàm `Gets()` được thực thi, stack của chúng ta sẽ như 
 |           ebp (getbuf)          |---> ebp của hàm getbuf()
 +---------------------------------+
                .
-               . => 0x28 bytes 
+               . => 0x27 bytes 
                .
 +---------------------------------+
 |              v1                 |---> top của stack
@@ -105,6 +105,27 @@ io.sendline(exploit_payload)
 # hiển thị kết quả
 io.interactive()
 ```  
+
+Stack khi bị buffer overflow:  
+```
++---------------------------------+
+|     địa chỉ của hàm smoke()     |---> return address của hàm getbuf()
++---------------------------------+
+|              'A'                |---> ebp của hàm getbuf()
++---------------------------------+
+               .
+               . => 0x25 bytes 
+               .
+
++---------------------------------+
+|              'A'                |
++---------------------------------+
+|              'A'                |
++---------------------------------+
+|              'A'                |---> top của stack
++---------------------------------+
+
+```
 
 Chạy script:  
 
