@@ -118,7 +118,7 @@ Stack khi bị overflow:
 |             'AAAA'              |---> ebp của hàm getbuf()
 +---------------------------------+
                .
-               . => 0x28 bytes 
+               . => 0x24 bytes 
                .
 +---------------------------------+
 |             'AAAA'              |---> top của stack
