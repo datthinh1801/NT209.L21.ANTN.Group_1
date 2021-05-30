@@ -91,6 +91,7 @@ context.binary = './bufbomb'
 # tạo 1 tiến trình tới chương trình bufbomb
 io = process(['./bufbomb', '-u', '09821978'])
 
+# tạo 1 ELF object để đọc metadata của hàm bufbomb
 e = ELF('./bufbomb')
 
 # tạo payload với (0x28 + 0x4) ký tự 'A'
