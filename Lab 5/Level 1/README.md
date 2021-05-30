@@ -85,6 +85,7 @@ cookie = cookie_getter.recvline()[2:-1]
 cookie = int(cookie, 16)
 print(f"cookie: {hex(cookie)}")
 
+# tạo 1 ELF object để đọc metadata của file bufbomb
 e = ELF('./bufbomb')
 
 # tạo payload với (0x28 + 0x4) bytes ký tự 'A'
