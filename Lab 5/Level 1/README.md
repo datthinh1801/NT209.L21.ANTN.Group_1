@@ -43,7 +43,7 @@ Tiếp theo, để quyết định được payload để nhập vào chương t
 +---------------------------------+
 |     return address (getbuf)     |---> return address của hàm getbuf()
 +---------------------------------+
-|           ebp (getbuf)          |---> ebp của hàm getbuf()
+|      ebp (getbuf's caller)      |---> ebp của hàm gọi getbuf()
 +---------------------------------+
                .
                . => 0x24 bytes 
@@ -61,7 +61,7 @@ Stack khi bắt đầu thực thi hàm `fizz()`:
 +---------------------------------+
 |     return address (fizz)       |---> return address của hàm fizz()
 +---------------------------------+
-|           ebp (fizz)            |---> đỉnh của stack
+|      ebp (fizz's caller)        |---> đỉnh của stack
 +---------------------------------+
 ```  
 
