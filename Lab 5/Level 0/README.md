@@ -55,7 +55,7 @@ Trước khi hàm `Gets()` được thực thi, stack của chúng ta sẽ như 
 +---------------------------------+
 |     return address (getbuf)     |---> return address của hàm getbuf()
 +---------------------------------+
-|           ebp (getbuf)          |---> ebp của hàm getbuf()
+|      ebp (getbuf's caller)      |---> ebp của hàm gọi getbuf()
 +---------------------------------+
                .
                . => 0x24 bytes 
