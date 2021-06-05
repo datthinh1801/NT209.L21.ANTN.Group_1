@@ -116,7 +116,7 @@ Stack khi bị overflow:
 +---------------------------------+
 |      địa chỉ của hàm fizz()     |---> return address của hàm getbuf()
 +---------------------------------+
-|             'AAAA'              |---> ebp của hàm getbuf()
+|             'AAAA'              |---> ebp của hàm gọi getbuf()
 +---------------------------------+
                .
                . => 0x24 bytes 
