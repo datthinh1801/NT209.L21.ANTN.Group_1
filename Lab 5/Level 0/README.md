@@ -53,7 +53,7 @@ Từ đoạn pseudocode trên thì ta có thể thấy, `buffer` sẽ có độ 
 Trước khi hàm `Gets()` được thực thi, stack của chúng ta sẽ như sau:  
 ```
 +---------------------------------+
-|     return address (getbuf)     |---> return address của hàm getbuf()
+|     return address (getbuf)     |---> return address của hàm gọi getbuf()
 +---------------------------------+
 |      ebp (getbuf's caller)      |---> ebp của hàm gọi getbuf()
 +---------------------------------+
@@ -112,9 +112,9 @@ io.interactive()
 Stack khi bị buffer overflow:  
 ```
 +---------------------------------+
-|     địa chỉ của hàm smoke()     |---> return address của hàm getbuf()
+|     địa chỉ của hàm smoke()     |---> return address của hàm gọi getbuf()
 +---------------------------------+
-|             'AAAA'              |---> ebp của hàm getbuf()
+|             'AAAA'              |---> ebp của hàm gọi getbuf()
 +---------------------------------+
                .
                . => 0x1C bytes 
