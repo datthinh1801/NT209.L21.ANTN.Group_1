@@ -41,7 +41,7 @@ Vậy bên cạnh việc overflow để thực thi được hàm `fizz()`, chún
 Tiếp theo, để quyết định được payload để nhập vào chương trình, chúng ta sẽ xem stack trước khi hàm `Gets()` được thực thi.  
 ```
 +---------------------------------+
-|     return address (getbuf)     |---> return address của hàm getbuf()
+|     return address (getbuf)     |---> return address của hàm gọi getbuf()
 +---------------------------------+
 |      ebp (getbuf's caller)      |---> ebp của hàm gọi getbuf()
 +---------------------------------+
@@ -59,7 +59,7 @@ Stack khi bắt đầu thực thi hàm `fizz()`:
 +---------------------------------+
 |           argument 1            |
 +---------------------------------+
-|     return address (fizz)       |---> return address của hàm fizz()
+|     return address (fizz)       |---> return address của hàm gọi fizz()
 +---------------------------------+
 |      ebp (fizz's caller)        |---> đỉnh của stack
 +---------------------------------+
@@ -112,9 +112,9 @@ Stack khi bị overflow:
 +---------------------------------+
 |             cookie              |---> tham số thứ nhất của hàm fizz()
 +---------------------------------+
-|             'AAAA'              |---> return address của hàm fizz()
+|             'AAAA'              |---> return address của hàm gọi fizz()
 +---------------------------------+
-|      địa chỉ của hàm fizz()     |---> return address của hàm getbuf()
+|      địa chỉ của hàm fizz()     |---> return address của hàm gọi getbuf()
 +---------------------------------+
 |             'AAAA'              |---> ebp của hàm gọi getbuf()
 +---------------------------------+
