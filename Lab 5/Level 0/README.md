@@ -66,7 +66,7 @@ Trước khi hàm `Gets()` được thực thi, stack của chúng ta sẽ như 
 
 ```  
 
-Vậy để thực thi được hàm `smoke()`, chúng ta sẽ tìm cách ghi đè địa chỉ của hàm `smoke()` vào ô nhớ stack chứa địa chỉ trả về của hàm `getbuf()` (như hình ảnh minh họa ở trên). Do đó, payload của chúng ta phải có độ dài `0x28 + 0x4 + 0x4` (với `0x28` bytes để fill hết toàn bộ buffer được cấp, `0x4` tiếp theo để ghi đè `ebp` của hàm `getbuf()` và `0x4` cuối cùng chính là địa chỉ của hàm `smoke()`.  
+Vậy để thực thi được hàm `smoke()`, chúng ta sẽ tìm cách ghi đè địa chỉ của hàm `smoke()` vào ô nhớ stack chứa địa chỉ trả về của hàm `getbuf()` (như hình ảnh minh họa ở trên). Do đó, payload của chúng ta phải có độ dài `0x28 + 0x4 + 0x4` (với `0x28` bytes để fill hết toàn bộ buffer được cấp, `0x4` tiếp theo để ghi đè `ebp` của hàm gọi `getbuf()` và `0x4` cuối cùng chính là địa chỉ của hàm `smoke()`.  
 
 Ở hàm `smoke()`, nếu chúng ta gọi hàm thành công thì chuỗi `Smoke!: You called smoke()` sẽ được in ra console.  
 ```c
