@@ -65,7 +65,7 @@ Stack khi bắt đầu thực thi hàm `fizz()`:
 +---------------------------------+
 ```  
 
-Khi hàm `fizz()` được thực thi thì giá trị của tham số thứ nhất sẽ được truy xuất qua tham chiếu `(%ebp + 8)` (như hình minh họa ở trên). Chính vì vậy, để thành công trong việc truyền giá trị vào hàm thì chúng ta cần ghi thêm `8` bytes vào payload với `4` bytes đầu để ghi đè giá trị của return address của hàm `fizz()` và `4` bytes cuối cùng chính là giá trị mà chúng ta muốn truyền vào hàm `fizz()`.
+Khi hàm `fizz()` được thực thi thì giá trị của tham số thứ nhất sẽ được truy xuất qua tham chiếu `(%ebp + 8)` (như hình minh họa ở trên). Chính vì vậy, để thành công trong việc truyền giá trị vào hàm thì chúng ta cần ghi thêm `8` bytes vào payload với `4` bytes đầu để ghi đè giá trị của return address của hàm gọi `fizz()` và `4` bytes cuối cùng chính là giá trị mà chúng ta muốn truyền vào hàm `fizz()`.
 
 ### Script
 ```python
