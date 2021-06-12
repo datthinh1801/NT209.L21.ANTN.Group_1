@@ -3,7 +3,7 @@
 Buffer overflow để hàm getbuf trả về `cookie` tương ứng với `userid` được nhập.  
 
 ## Solution
-Cách chèn shellcode ở level cũng sẽ tương tự như ở level trước, khác biệt duy nhất là chúng ta phải khôi phục trạng thái của chương trình thay vì để chương trình bị kết thúc sau khi thực thi shellcode.  
+Cách chèn shellcode ở level này cũng sẽ tương tự như ở level trước, khác biệt duy nhất là chúng ta phải khôi phục trạng thái của chương trình thay vì để chương trình bị kết thúc sau khi thực thi shellcode.  
 
 Đầu tiên, ta sẽ xác định `return address`.  
 ![image](https://user-images.githubusercontent.com/44528004/121771564-44868200-cb9a-11eb-9194-4148092d06ce.png)
